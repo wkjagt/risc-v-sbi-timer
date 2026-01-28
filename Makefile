@@ -1,13 +1,14 @@
 CROSS_COMPILE=riscv64-linux-gnu-
 
-timer: timer.o boot.o timer.ld
-	${CROSS_COMPILE}ld -T timer.ld --no-dynamic-linker -static -nostdlib -o timer timer.o boot.o
+timer: build/timer.o build/sbi.o build/boot.o build/interrupts.o timer.ld
+	${CROSS_COMPILE}ld -T timer.ld --no-dynamic-linker -static -nostdlib \
+		-o build/timer build/timer.o build/sbi.o build/boot.o build/interrupts.o
 
-boot.o: boot.s timer.ld
-	${CROSS_COMPILE}as -march=rv64i -mabi=lp64 -o boot.o -c boot.s
+build/boot.o: boot.s
+	${CROSS_COMPILE}as -march=rv64gc -mabi=lp64 -c boot.s -o build/boot.o
 
-timer.o: timer.s
-	${CROSS_COMPILE}as -march=rv64i -mabi=lp64 -o timer.o -c timer.s
+build/%.o: src/%.c
+	${CROSS_COMPILE}gcc -march=rv64gc -mabi=lp64 -c $< -o $@
 
-timer.s: timer.c
-	${CROSS_COMPILE}gcc -march=rv64i -mabi=lp64 -S timer.c
+clean:
+	rm build/*

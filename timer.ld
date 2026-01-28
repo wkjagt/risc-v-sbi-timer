@@ -1,14 +1,13 @@
 MEMORY {
+  /*  OpenSBI jumps to 0x80200000 */
   kernel_space (rwx) : ORIGIN = 0x80200000, LENGTH = 2 * 1024 * 1024
 }
 
 SECTIONS {
   .text : {
-    boot.o(.text)
+    build/boot.o(.text)
     *(.text)
   } > kernel_space
-
-  .text.interrupt : ALIGN(4) {} 
 
   .data : {
     *(.data)
@@ -22,6 +21,7 @@ SECTIONS {
     *(.bss)
   } > kernel_space
 
+  /* Align to 8 bytes for the stack */
   . = ALIGN(8);
   . = . + 4096;
   _STACK_PTR = .;

@@ -1,0 +1,13 @@
+[
+  {
+    "file": "timer.c",
+    "arguments": [
+      "riscv64-linux-gnu-gcc",
+      "-march=rv64gc",
+      "-mabi=lp64",
+      "-S",
+      "timer.c"
+    ],
+    "directory": "/home/willem/code/github.com/popovicu/risc-v-sbi-timer"
+  }
+]
